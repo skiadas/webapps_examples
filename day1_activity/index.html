@@ -1,0 +1,38 @@
+<html>
+
+<head>
+  <link rel="stylesheet" href="basic.css">
+  <script src="https://kit.fontawesome.com/3574f171fd.js" crossorigin="anonymous"></script>
+  <title>An example small web app</title>
+</head>
+
+<body>
+  <h1>A simple web app</h1>
+  <p>Watch the balls bounce around! Click them to earn their points!</p>
+  <div class="action-bar">Current points: <span id="points">0</span></div>
+  <div class="action-bar">
+    <div class="action-bar-group">
+      <button id="changeColorsBtn">Random Colors!</button>
+      <button id="changeSpeedsBtn">Random Speeds!</button>
+    </div>
+    <div class="action-bar-group">
+      <button id="more-balls"><i class="fas fa-plus"></i></button>
+      <button id="fewer-balls"><i class="fas fa-minus"></i></button>
+    </div>
+    <div class="action-bar-group">
+      <button id="play"><i class="fas fa-play"></i></button>
+      <button id="stop"><i class="fas fa-stop"></i></button>
+      <button id="slower"><i class="fas fa-gauge-simple-min"></i></button>
+      <button id="faster"><i class="fas fa-gauge-simple-max"></i></button>
+    </div>
+  </div>
+  <div class="boundary">
+    <div class="ball" style="background-color: purple"></div>
+    <div class="ball"></div>
+  </div>
+  <script src="border.js"></script>
+  <script src="ball.js"></script>
+  <script src="code.js"></script>
+</body>
+
+</html>
