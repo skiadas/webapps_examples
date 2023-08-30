@@ -57,6 +57,7 @@ body {
 .action-bar button {
   height: 2em;
   border-radius: 5px;
+  user-select: none;
 }
 
 .action-bar button:hover, .action-bar button.pressed {

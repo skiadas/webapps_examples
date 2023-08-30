@@ -7,6 +7,14 @@ let timerId = null;
 window.addEventListener("DOMContentLoaded", () => {
   initializeBalls();
   startPlay();
+  document.querySelector(".boundary").addEventListener("selectstart", (ev) => {
+    ev.preventDefault();
+    ev.stopPropagation();
+  });
+  document.querySelector(".boundary").addEventListener("mousedown", (ev) => {
+    ev.preventDefault();
+    ev.stopPropagation();
+  });
   document
     .querySelector("#changeColorsBtn")
     .addEventListener("click", randomizeColors);
@@ -78,12 +86,11 @@ function stopPlay() {
 
 function updatePlayButtons(isPlaying) {
   if (isPlaying) {
-    document.querySelector("#play").classList.add('pressed');
+    document.querySelector("#play").classList.add("pressed");
     document.querySelector("#stop").classList.remove("pressed");
   } else {
     document.querySelector("#play").classList.remove("pressed");
     document.querySelector("#stop").classList.add("pressed");
-
   }
 }
 
