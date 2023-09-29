@@ -2,23 +2,19 @@ const BALL_RADIUS = 20; // pixels
 const STEP = 5; // pixels per move
 const MAX_STEP = 40;
 
-class Ball {
+class Ball extends SimpleBall {
   #el;
   #points;
   #parent;
-  #direction;
-  #step;
-  #location;
   constructor(el) {
+    super();
     this.#el = el;
     this.#points = randomInt(1, 20);
     this.#parent = new Border(this.#el.closest(".boundary"));
-    this.#direction = randomAngle();
-    this.#step = STEP;
-    this.#location = new Location(
-      randomInside(this.#parent.width, BALL_RADIUS),
-      randomInside(this.#parent.height, BALL_RADIUS),
-    );
+    this.location = {
+      x: randomInside(this.#parent.width, BALL_RADIUS),
+      y: randomInside(this.#parent.height, BALL_RADIUS),
+    };
     this.#initializeElement();
     this.#place();
   }
@@ -31,21 +27,20 @@ class Ball {
   }
 
   #place() {
-    const {x, y} = this.#location;
-    this.#el.style.left = x - BALL_RADIUS + "px";
-    this.#el.style.top = y - BALL_RADIUS + "px";
+    this.#el.style.left = this.x - BALL_RADIUS + "px";
+    this.#el.style.top = this.y - BALL_RADIUS + "px";
   }
   update() {
-    const newCenter = this.#location.shiftedBy(this.#step, this.#direction);
+    const newCenter = this.nextLocation();
     const borderContact = this.#parent.detectOutOfBounds(newCenter, BALL_RADIUS);
     this.#parent.lightUp(borderContact);
 
     if (borderContact === "left" || borderContact === "right") {
-      this.#direction = Math.PI - this.#direction;
+      this.flipDirectionX();
     } else if (borderContact === "top" || borderContact === "bottom") {
-      this.#direction = -this.#direction;
+      this.flipDirectionY();
     } else {
-      this.#location = newCenter;
+      this.advance();
       this.#place();
     }
   }
@@ -53,15 +48,6 @@ class Ball {
     const { bgColor, color } = generateColor();
     this.#el.style.backgroundColor = bgColor;
     this.#el.style.color = color;
-  }
-  randomizeSpeed() {
-    this.#step = Math.random() * MAX_STEP;
-  }
-  faster() {
-    this.#step = Math.min(1.1 * this.#step, MAX_STEP);
-  }
-  slower() {
-    this.#step = 0.9 * this.#step;
   }
 }
 function randomInside(width, radius) {
