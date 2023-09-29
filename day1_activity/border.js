@@ -21,7 +21,7 @@ class Border {
     }, FLASH_INTERVAL);
   }
   detectOutOfBounds(location, radius) {
-    const [x, y] = location;
+    const {x, y} = location;
     if (x - radius < 0) return "left";
     if (x + radius > this.width) return "right";
     if (y - radius < 0) return "top";

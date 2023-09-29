@@ -31,7 +31,6 @@ function initializeBalls() {
 function initializeBall(el) {
   const ball = new Ball(el);
   ballsList.push(ball);
-  ball.place();
 }
 
 function addBall() {
