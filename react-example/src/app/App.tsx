@@ -1,33 +1,55 @@
+"use client";
+import { useState } from 'react';
+import Ball from './Ball';
 import './App.css'
 
+function Header() {
+    return <header>
+        <h1>A simple web app</h1>
+        <p>Watch the balls bounce around! Click them to earn their points!</p>
+    </header>;
+}
+
+type CurrentPointProps = {
+    points: number;
+}
+function CurrentPoints({ points }: CurrentPointProps) {
+    return <div className="action-bar">Current points: <span id="points">{points}</span></div>;
+}
+
+function ButtonGroup({ children }) {
+   return <div className="action-bar-group">
+    {children}
+    </div>
+
+}
+
 export default function App() {
+    const [points, setPoints] = useState<number>(0);
     return <>
-        <header>
-            <h1>A simple web app</h1>
-            <p>Watch the balls bounce around! Click them to earn their points!</p>
-        </header>
+        <Header />
         <aside>
-            <div className="action-bar">Current points: <span id="points">0</span></div>
+            <CurrentPoints points={points} />
             <div className="action-bar">
-                <div className="action-bar-group">
+                <ButtonGroup>
                     <button id="changeColorsBtn">Random Colors!</button>
                     <button id="changeSpeedsBtn">Random Speeds!</button>
-                </div>
-                <div className="action-bar-group">
+                </ButtonGroup>
+                <ButtonGroup>
                     <button id="more-balls"><i className="fas fa-plus"></i></button>
                     <button id="fewer-balls"><i className="fas fa-minus"></i></button>
-                </div>
-                <div className="action-bar-group">
+                </ButtonGroup>
+                <ButtonGroup>
                     <button id="play"><i className="fas fa-play"></i></button>
                     <button id="stop"><i className="fas fa-stop"></i></button>
                     <button id="slower"><i className="fas fa-gauge-simple-min"></i></button>
                     <button id="faster"><i className="fas fa-gauge-simple-max"></i></button>
-                </div>
+                </ButtonGroup>
             </div>
         </aside>
         <section className="boundary">
-            <div className="ball" style={{ backgroundColor: "purple" }}></div>
-            <div className="ball"></div>
+            <Ball color="purple" />
+            <Ball />
         </section>
     </>;
 }
