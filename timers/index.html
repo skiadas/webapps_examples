@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button id="start">Start</button>
+    <div id="clock" style="font-size: 210%;">hi there!</div>
+    <textarea id="text"></textarea>
+    <p id="charCount"></p>
+    <script defer>
+        // function that returns a function
+        function delay(f, milli) {
+            let timerId = null;
+            // wrapper function
+            const wrapper = (...args) => {
+                timerId = setTimeout(() => {
+                    timerId = null;
+                    f(...args);
+                }, milli);
+            }
+            wrapper.clear = () => { clearTimeout(timerId); timerId = null; };
+
+            return wrapper;
+        }
+
+        f = (s) => console.log(s);
+        g = delay(f, 10000);
+        g("hi there");
+
+        function debounce(f, delay) {
+            let timerId;
+            let lastCalled;
+            let lastArgs;
+            const delayedFunction = function(...args) {
+                lastArgs = args;
+                lastCalled = Date.now();   // when in milliseconds
+                if (timerId) return;
+                const wrapper = () => {
+                    const now = Date.now();
+                    if (now - lastCalled >= delay) {
+                        timerId = null;
+                        f(...lastArgs);
+                    } else {
+                        const remaining = delay - (now - lastCalled);
+                        setTimeout(wrapper, remaining);
+                    }
+                }
+                timerId = setTimeout(wrapper, delay);
+            }
+            return delayedFunction;
+        }
+        // hard throttle
+        function throttle(f, delay) {
+            let timerId = null;
+            let lastArgs;
+            let callWaiting = false;
+            let delayedFunction = () => {
+                if (callWaiting) {
+                    callWaiting = false;
+                    setTimeout(delayedFunction, delay);
+                    f(lastArgs);
+                }
+            };
+            return function(...args) {
+                if (timerId != null) { // timer ongoing
+                    lastArgs = args;
+                    callWaiting = true;
+                } else {  // no timer ongoing
+                    callWaiting = false;
+                    setTimeout(delayedFunction, delay);
+                    f(...args);
+                }
+            };
+        }
+
+        const div = document.createElement('div');
+        div.style.width = '30px';
+        div.style.height = '30px';
+        div.style.backgroundColor = 'blue';
+        div.style.zIndex = 1000;
+        div.style.position = 'fixed';
+        document.body.append(div);
+        const handler = throttle((ev) => {
+            // console.log(ev);
+            div.style.top = ev.pageY + 'px';
+            div.style.left = ev.pageX + 'px';
+        }, 10);
+        document.body.addEventListener("mousemove", delay(handler, 200));
+
+        const $textArea = document.querySelector("#text");
+        $textArea.addEventListener("keyup", debounce((ev) => {
+            document.querySelector("#charCount").textContent = $textArea.value.length;
+        }, 500));
+    </script>
+    <script>
+        let timerId;
+        document.querySelector("#start").addEventListener("click", (ev) => {
+            if (timerId) {
+                stopTimer();
+            } else {
+                startTimer();
+            }
+        });
+        function stopTimer() {
+            clearInterval(timerId);
+            timerId = null;
+        }
+        function startTimer() {
+            const startTime = Date.now();    // different from new Date();
+            const f = () => {
+                const now = Date.now();
+                const secondsPassed = Math.floor((now - startTime) / 1000);
+                document.querySelector("#clock").textContent = secondsPassed;
+            }
+            timerId = setInterval(f, 1000);
+        }
+    </script>
+</body>
+</html>

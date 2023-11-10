@@ -8,14 +8,8 @@ class Location {
     get x() {
         return this.#x;
     }
-    set x(newX) {
-        this.#x = newX;
-    }
     get y() {
         return this.#y;
-    }
-    set y(newY) {
-        this.#y = newY;
     }
     shiftedBy(step, direction) {
         const newX = this.#x + step * Math.cos(direction);

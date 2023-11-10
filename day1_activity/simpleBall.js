@@ -7,7 +7,7 @@ class SimpleBall {
         this.#step = STEP;
         this.#location = new Location(0, 0);
     }
-    set location({x , y}) {
+    set location({ x, y }) {
         this.#location.x = x;
         this.#location.y = y;
     }
