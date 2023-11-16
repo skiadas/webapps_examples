@@ -1,6 +1,9 @@
 "use client";
-import { useState } from 'react';
-import Ball from './Ball';
+import { useEffect, useState } from 'react';
+import { ActionBar } from './ActionBar';
+import { Boundary } from './Boundary';
+import { makeBall } from './BallData';
+import type { BallData } from './BallData';
 import './App.css'
 
 function Header() {
@@ -17,39 +20,34 @@ function CurrentPoints({ points }: CurrentPointProps) {
     return <div className="action-bar">Current points: <span id="points">{points}</span></div>;
 }
 
-function ButtonGroup({ children }) {
-   return <div className="action-bar-group">
-    {children}
-    </div>
-
-}
+type AllBallsType = ReadonlyArray<BallData>;
 
 export default function App() {
     const [points, setPoints] = useState<number>(0);
+    const [balls, setBalls] = useState<AllBallsType>([makeBall(), makeBall()]);
+    const [timerId, setTimerId] = useState<number|undefined>(undefined);
+    useEffect(() => {
+        if (timerId == undefined) {
+            const id = setInterval(() => {
+                const newBalls = (balls) => balls.map((ball) => ({
+                    ...ball,
+                    x: ball.x + 5
+                }));
+                console.log(balls, newBalls);
+                setBalls(newBalls);
+            }, 1000);
+            setTimerId(id);
+        }
+        return () => {
+            clearInterval(timerId);
+        }
+    }, []);
     return <>
         <Header />
         <aside>
             <CurrentPoints points={points} />
-            <div className="action-bar">
-                <ButtonGroup>
-                    <button id="changeColorsBtn">Random Colors!</button>
-                    <button id="changeSpeedsBtn">Random Speeds!</button>
-                </ButtonGroup>
-                <ButtonGroup>
-                    <button id="more-balls"><i className="fas fa-plus"></i></button>
-                    <button id="fewer-balls"><i className="fas fa-minus"></i></button>
-                </ButtonGroup>
-                <ButtonGroup>
-                    <button id="play"><i className="fas fa-play"></i></button>
-                    <button id="stop"><i className="fas fa-stop"></i></button>
-                    <button id="slower"><i className="fas fa-gauge-simple-min"></i></button>
-                    <button id="faster"><i className="fas fa-gauge-simple-max"></i></button>
-                </ButtonGroup>
-            </div>
+            <ActionBar />
         </aside>
-        <section className="boundary">
-            <Ball color="purple" />
-            <Ball />
-        </section>
+        <Boundary balls={balls} />
     </>;
 }
