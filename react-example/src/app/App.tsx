@@ -2,8 +2,8 @@
 import { useEffect, useState } from 'react';
 import { ActionBar } from './ActionBar';
 import { Boundary } from './Boundary';
-import { makeBall } from './BallData';
-import type { BallData } from './BallData';
+import { makeBall, moveBalls } from './BallData';
+import type { BallData, AllBallsType } from './BallData';
 import './App.css'
 
 function Header() {
@@ -20,7 +20,6 @@ function CurrentPoints({ points }: CurrentPointProps) {
     return <div className="action-bar">Current points: <span id="points">{points}</span></div>;
 }
 
-type AllBallsType = ReadonlyArray<BallData>;
 
 export default function App() {
     const [points, setPoints] = useState<number>(0);
@@ -29,11 +28,7 @@ export default function App() {
     useEffect(() => {
         if (timerId == undefined) {
             const id = setInterval(() => {
-                const newBalls = balls.map((ball) => ({
-                    ...ball,
-                    x: ball.x + 5
-                }));
-                console.log(balls, newBalls);
+                const newBalls = moveBalls(balls);
                 setBalls(newBalls);
             }, 1000);
             setTimerId(id);

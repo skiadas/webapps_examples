@@ -9,6 +9,9 @@ export type BallData = {
     readonly points: number;
 };
 
+export type AllBallsType = ReadonlyArray<BallData>;
+
+
 export function makeBall(): BallData {
     return {
         x: randomInside(600, 20),
@@ -18,4 +21,11 @@ export function makeBall(): BallData {
         color: generateColor(),
         points: randomInt(1, 20)
     }
+}
+
+export function moveBalls(balls: AllBallsType): AllBallsType {
+    return balls.map((ball) => ({
+        ...ball,
+        x: ball.x + 5
+    }));
 }
