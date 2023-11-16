@@ -25,11 +25,11 @@ type AllBallsType = ReadonlyArray<BallData>;
 export default function App() {
     const [points, setPoints] = useState<number>(0);
     const [balls, setBalls] = useState<AllBallsType>([makeBall(), makeBall()]);
-    const [timerId, setTimerId] = useState<number|undefined>(undefined);
+    const [timerId, setTimerId] = useState<ReturnType<typeof setTimeout>|undefined>(undefined);
     useEffect(() => {
         if (timerId == undefined) {
             const id = setInterval(() => {
-                const newBalls = (balls) => balls.map((ball) => ({
+                const newBalls = balls.map((ball) => ({
                     ...ball,
                     x: ball.x + 5
                 }));
