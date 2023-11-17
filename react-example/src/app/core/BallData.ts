@@ -24,8 +24,23 @@ export function makeBall(): BallData {
 }
 
 export function moveBalls(balls: AllBallsType): AllBallsType {
-    return balls.map((ball) => ({
+    return balls.map(moveBall);
+}
+
+export function reassignColors(balls: AllBallsType): AllBallsType {
+    return balls.map(reassignColor);
+}
+
+function reassignColor(ball: BallData): BallData {
+    return {
         ...ball,
-        x: ball.x + 5
-    }));
+        color: generateColor()
+    };
+}
+function moveBall(ball: BallData): BallData {
+    return {
+        ...ball,
+        x: ball.x + ball.speed * Math.cos(ball.direction),
+        y: ball.y + ball.speed * Math.sin(ball.direction)
+    };
 }
