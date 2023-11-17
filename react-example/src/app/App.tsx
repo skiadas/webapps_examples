@@ -24,18 +24,13 @@ function CurrentPoints({ points }: CurrentPointProps) {
 export default function App() {
     const [points, setPoints] = useState<number>(0);
     const [balls, setBalls] = useState<AllBallsType>([makeBall(), makeBall()]);
-    const [timerId, setTimerId] = useState<ReturnType<typeof setTimeout>|undefined>(undefined);
     useEffect(() => {
-        if (timerId == undefined) {
-            const id = setInterval(() => {
-                const newBalls = moveBalls(balls);
-                setBalls(newBalls);
-            }, 1000);
-            setTimerId(id);
-        }
-        return () => {
-            clearInterval(timerId);
-        }
+        const id = setInterval(() => {
+            console.log("happening");
+            const newBalls = moveBalls(balls);
+            setBalls(newBalls);
+        }, 1000);
+        return () => { clearInterval(id); };
     }, []);
     return <>
         <Header />
