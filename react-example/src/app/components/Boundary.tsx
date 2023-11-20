@@ -1,14 +1,12 @@
 import Ball from './Ball';
 import { BallData } from '../core/BallData';
 
-type BoundaryProps = { 
-    readonly balls: ReadonlyArray<BallData>;
-    readonly onBallClick: (p: number) => void;
+type BoundaryProps = {
+    readonly children: any;
 };
 
-export function Boundary({ balls, onBallClick }: BoundaryProps) {
-    const ballEls = balls.map((ball, i) => <Ball key={i} data={ball} onBallClick={onBallClick} />);
+export function Boundary({ children }: BoundaryProps) {
     return <section className="boundary">
-        {ballEls}
+        {children}
     </section>
 }

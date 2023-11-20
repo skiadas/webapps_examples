@@ -1,9 +1,12 @@
 "use client";
+
 import { useEffect, useState } from 'react';
 import { ActionBar } from './ActionBar';
 import { Boundary } from './Boundary';
+import Ball from './Ball';
 import { makeBall, moveBalls, reassignColors } from '../core/BallData';
-import type { BallData, AllBallsType } from '../core/BallData';
+import { reduceState } from '../core/stateReducer';
+import type { ActionType, GameState } from '../core/stateReducer';
 import './App.css'
 
 function Header() {
@@ -16,40 +19,33 @@ function Header() {
 type CurrentPointProps = {
     points: number;
 }
+
 function CurrentPoints({ points }: CurrentPointProps) {
     return <div className="action-bar">Current points: <span id="points">{points}</span></div>;
 }
 
-export type ActionType = 'random-colors' | 'random-speeds' | 'more-balls' | 'less-balls';
-
 export default function App() {
-    const [points, setPoints] = useState<number>(0);
-    const [balls, setBalls] = useState<AllBallsType>([makeBall(), makeBall()]);
-
-    const increasePoints = (ballPoints: number) => {
-        setPoints(points => points + ballPoints);
-    };
+    const [gameState, setGameState] = useState<GameState>({
+        points: 0,
+        balls: [makeBall(), makeBall()]
+    });
+    const dispatch = (action: ActionType) => {
+        setGameState(state => reduceState(state, action));
+    }
 
     useEffect(() => {
-        const id = setInterval(() => { setBalls(moveBalls); }, 1000);
+        const id = setInterval(() => { dispatch({ type: 'advance' }) }, 1000);
         return () => { clearInterval(id); };
     }, []);
-
-    const dispatch = (action: ActionType) => {
-        switch (action) {
-            case 'random-colors': setBalls(reassignColors); return;
-            case 'random-speeds': return;
-            case 'more-balls': setBalls([...balls, makeBall()]); return;
-            case 'less-balls': setBalls(balls.slice(0, -1)); return;
-        }
-    }
 
     return <>
         <Header />
         <aside>
-            <CurrentPoints points={points} />
+            <CurrentPoints points={gameState.points} />
             <ActionBar dispatch={dispatch} />
         </aside>
-        <Boundary balls={balls} onBallClick={increasePoints} />
+        <Boundary>
+            {gameState.balls.map((ball, i) => <Ball key={i} data={ball} onBallClick={(points) => dispatch({ 'type': 'add-points', points })} />)}
+        </Boundary>
     </>;
 }
