@@ -1,4 +1,6 @@
+import { DispatchContext } from "../core/stateContext";
 import type { ActionType } from "../core/stateReducer";
+import { Dispatch, useContext } from "react";
 
 function ButtonGroup({ children }) {
     return <div className="action-bar-group">
@@ -8,10 +10,11 @@ function ButtonGroup({ children }) {
 }
 
 type ActionBarProps = {
-    readonly dispatch: (action: ActionType) => void;
+    // readonly dispatch: (action: ActionType) => void;
 }
 
-export function ActionBar({ dispatch }: ActionBarProps) {
+export function ActionBar() {
+    const dispatch = useContext(DispatchContext)!;
     return <div className="action-bar">
         <ButtonGroup>
             <button id="changeColorsBtn" onClick={() => dispatch({ type: 'random-colors' })}>Random Colors!</button>

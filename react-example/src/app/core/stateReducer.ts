@@ -18,17 +18,17 @@ export function reduceState(state: GameState, action: ActionType): GameState {
     const { points, balls } = state;
     switch (action.type) {
         case 'random-colors':
-            return { points, balls: reassignColors(balls) };
+            return { ...state, balls: reassignColors(balls) };
         case 'random-speeds':
-            return { points, balls }; // TODO: Fix me
+            return { ...state }; // TODO: Fix me
         case 'more-balls':
-            return { points, balls: [...balls, makeBall()] };
+            return { ...state, balls: [...balls, makeBall()] };
         case 'less-balls':
-            return { points, balls: balls.slice(0, -1) };
+            return { ...state, balls: balls.slice(0, -1) };
         case 'advance':
-            return { points, balls: moveBalls(balls) };
+            return { ...state, balls: moveBalls(balls) };
         case 'add-points':
-            return { points: points + action.points, balls };
+            return { ...state, points: points + action.points };
         default: throw new Error("Shouldn't happen");
     }
 }
