@@ -1,6 +1,6 @@
 "use client";
 
-import { useContext } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import { ActionBar } from './ActionBar';
 import { Boundary } from './Boundary';
 import Ball from './Ball';
@@ -27,7 +27,14 @@ function CurrentPoints() {
 
 export default function App() {
     const [gameState, dispatch] = useGameState();
+    const borderRef = useRef<HTMLElement>(null);
 
+    useEffect(() => {
+        if (borderRef.current) {
+            const el = borderRef.current;
+            dispatch({ type: 'set-dimensions', dimensions: [el.clientWidth, el.clientHeight] });
+        }
+    }, []);
     return <StateContext.Provider value={gameState}>
         <DispatchContext.Provider value={dispatch}>
             <Header />
@@ -35,7 +42,7 @@ export default function App() {
                 <CurrentPoints />
                 <ActionBar />
             </aside>
-            <Boundary>
+            <Boundary ref={borderRef}>
                 {gameState.balls.map((ball, i) => <Ball key={i} data={ball} onBallClick={(points) => dispatch({ 'type': 'add-points', points })} />)}
             </Boundary>
         </DispatchContext.Provider>

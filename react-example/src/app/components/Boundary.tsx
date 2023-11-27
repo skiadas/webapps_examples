@@ -1,12 +1,17 @@
-import Ball from './Ball';
-import { BallData } from '../core/BallData';
+import { Ref, forwardRef } from 'react';
 
 type BoundaryProps = {
     readonly children: any;
 };
 
-export function Boundary({ children }: BoundaryProps) {
-    return <section className="boundary">
+export const Boundary = forwardRef<HTMLElement, BoundaryProps>(({ children }, ref) => {
+    return <section className="boundary" ref={ref}>
         {children}
     </section>
-}
+});
+
+// export function Boundary({ children }: BoundaryProps) {
+//     return <section className="boundary">
+//         {children}
+//     </section>
+// }
